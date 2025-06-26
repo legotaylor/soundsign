@@ -13,4 +13,6 @@ public interface MusicalEntity {
 	boolean soundsign$getShouldUpdateDelay();
 	void soundsign$setReset(boolean value);
 	boolean soundsign$getReset();
+	void soundsign$setWasPowered(boolean value);
+	boolean soundsign$getWasPowered();
 }

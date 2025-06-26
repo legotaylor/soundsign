@@ -22,6 +22,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(priority = 100, value = SignBlockEntity.class)
 public abstract class EntityBlockEntityMixin implements MusicalEntity {
+	@Unique
+	private boolean soundsign$wasPowered;
+	@Override
+	public void soundsign$setWasPowered(boolean value) {
+		this.soundsign$wasPowered = value;
+	}
+	@Override
+	public boolean soundsign$getWasPowered() {
+		return this.soundsign$wasPowered;
+	}
 	@Inject(method = "tick", at = @At("TAIL"))
 	private static void soundsign$tick(World world, BlockPos pos, BlockState state, SignBlockEntity sign, CallbackInfo ci) {
 		if (sign.getEditor() == null) {
@@ -31,12 +41,13 @@ public abstract class EntityBlockEntityMixin implements MusicalEntity {
 					if (attachedState.get(NoteBlock.POWERED)) {
 						soundsign$processSound(true, world, sign);
 						soundsign$processSound(false, world, sign);
-						if (((MusicalEntity)sign).soundsign$getReset()) {
-							((MusicalEntity)sign).soundsign$setReset(false);
+						if (!((MusicalEntity)sign).soundsign$getWasPowered()) {
+							((MusicalEntity)sign).soundsign$setWasPowered(true);
 						}
 					} else {
-						if (!((MusicalEntity)sign).soundsign$getReset()) {
+						if (((MusicalEntity)sign).soundsign$getWasPowered()) {
 							((MusicalEntity)sign).soundsign$setReset(true);
+							((MusicalEntity)sign).soundsign$setWasPowered(false);
 						}
 					}
 					if (((MusicalEntity)sign).soundsign$getReset()) {

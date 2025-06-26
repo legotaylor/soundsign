@@ -5,7 +5,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NoteBlock;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.WritableBookContentComponent;
 import net.minecraft.component.type.WrittenBookContentComponent;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
@@ -26,11 +25,19 @@ import java.util.stream.Collectors;
 @Mixin(priority = 100, value = ItemFrameEntity.class)
 public abstract class ItemFrameEntityMixin extends AbstractDecorationEntity implements MusicalEntity {
 	@Shadow public abstract ItemStack getHeldItemStack();
-
 	protected ItemFrameEntityMixin(EntityType<? extends AbstractDecorationEntity> entityType, World world) {
 		super(entityType, world);
 	}
-
+	@Unique
+	private boolean soundsign$wasPowered;
+	@Override
+	public void soundsign$setWasPowered(boolean value) {
+		this.soundsign$wasPowered = value;
+	}
+	@Override
+	public boolean soundsign$getWasPowered() {
+		return this.soundsign$wasPowered;
+	}
 	@Override
 	public void tick() {
 		super.tick();
@@ -41,12 +48,13 @@ public abstract class ItemFrameEntityMixin extends AbstractDecorationEntity impl
 			if (attachedState.isOf(Blocks.NOTE_BLOCK)) {
 				if (attachedState.get(NoteBlock.POWERED)) {
 					soundsign$processSound(world, this.getHeldItemStack());
-					if (this.soundsign$getReset()) {
-						this.soundsign$setReset(false);
+					if (!this.soundsign$getWasPowered()) {
+						this.soundsign$setWasPowered(true);
 					}
 				} else {
-					if (!this.soundsign$getReset()) {
+					if (this.soundsign$getWasPowered()) {
 						this.soundsign$setReset(true);
+						this.soundsign$setWasPowered(false);
 					}
 				}
 				if (this.soundsign$getReset()) {
