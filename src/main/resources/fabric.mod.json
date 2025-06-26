@@ -1,0 +1,20 @@
+{
+	"schemaVersion": 1,
+	"id": "sound-sign",
+	"version": "${version}",
+	"name": "Sound Sign",
+	"description": "Play sounds using signs and noteblocks!",
+	"authors": [
+		"dannytaylor"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/soundsign",
+		"sources": "https://github.com/legotaylor/soundsign"
+	},
+	"license": "LGPL-3.0-or-later",
+	"icon": "assets/sound-sign/icon.png",
+	"environment": "*",
+	"mixins": [
+		"sound-sign.mixins.json"
+	]
+}
